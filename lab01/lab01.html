@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Кодрэт</title>
+	</head>
+	<body>
+		<canvas width="1520px" height="720px" id="myCanvas">
+		</canvas>
+		
+		<script>
+				var canvas = document.getElementById("myCanvas");				
+				var ctx = canvas.getContext("2d");
+				
+				var currentAngle = 0;
+				var radius = 200;
+				var baseX = canvas.width/2;
+				var baseY = canvas.height/2;
+
+				setInterval(function() {
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					// считаем косинус текущего значения угла
+					// и умножаем на значение радиуса
+					var vx = Math.cos(currentAngle) * radius;
+
+					// считаем синус текущего значения угла
+					// и умножаем на значение радиуса
+					var vy = Math.sin(currentAngle) * radius;
+
+					ctx.fillRect(baseX + vx, baseY + vy, 25, 25);
+					// считем новую позицию по x и y относительно центра окружности
+					// и заливаем ее квадратиком высотой и шириной в 5 пикселей
+
+					// увеличиваем значение угла
+					currentAngle -= 0.005;
+				}, 1)
+		</script>
+		
+	</body>
+</html>
