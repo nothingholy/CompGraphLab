@@ -1,9 +1,9 @@
 let size = 600,
   offset = -5;
 
-let prevX, prevY, start;
+let pX, pY, start;
 
-let paint = false;
+let flag = false;
 
 
 function setup() {
@@ -15,36 +15,36 @@ function setup() {
 
 
 function mousePressed() {
-  if (!paint) {
+  if (!flag) {
     background(255);
   }
 }
 
 function mouseReleased() {
-  if (!paint) {
-    start = prevX = prevY = null;
+  if (!flag) {
+    start = pX = pY = null;
   }
 }
 
 function draw() {
-  if (mouseIsPressed && !paint) {
+  if (mouseIsPressed && !flag) {
     stroke(0, 0, 0);
     strokeWeight(3);
-    if (prevX && prevY) {
-      line(prevX, prevY, mouseX + offset, mouseY + offset);
+    if (pX && pY) {
+      line(pX, pY, mouseX + offset, mouseY + offset);
     }
 
-    prevX = mouseX + offset;
-    prevY = mouseY + offset;
+    pX = mouseX + offset;
+    pY = mouseY + offset;
     if (!start) {
-      start = [prevX, prevY];
+      start = [pX, pY];
     }
   }
 
 }
 
 
-function compareR(temp) {
+function compareFirst(temp) {
   let res = true;
   if (temp[0] != 255 || temp[1] != 0 || temp[2] != 0) {
     res = false;
@@ -53,7 +53,7 @@ function compareR(temp) {
   return res;
 }
 
-function compareB(temp) {
+function compareSecond(temp) {
   let res = true;
   if (temp[0] != 0 || temp[1] != 0 || temp[2] != 0) {
     res = false;
@@ -73,11 +73,11 @@ function filling(begin) {
     y = P[1];
 
     xMin = x;
-    while (!compareB(get(xMin - 1, y))) {
+    while (!compareSecond(get(xMin - 1, y))) {
       xMin--;
     }
     xMax = x;
-    while (!compareB(get(xMax + 1, y))) {
+    while (!compareSecond(get(xMax + 1, y))) {
       xMax++;
     }
 
@@ -90,7 +90,7 @@ function filling(begin) {
     let flag = true;
     for (i = xMin; i < xMax; i++) {
       let temp = get(i, y - 1);
-      if (!compareB(temp) && !compareR(temp)) {
+      if (!compareSecond(temp) && !compareFirst(temp)) {
         if (flag) {
           stack.push([i, y - 1]);
           flag = false;
@@ -103,7 +103,7 @@ function filling(begin) {
     flag = true;
     for (let i = xMin; i < xMax; i++) {
       let temp = get(i, y + 1);
-      if (!compareB(temp) && !compareR(temp)) {
+      if (!compareSecond(temp) && !compareFirst(temp)) {
         if (flag) {
           stack.push([i, y + 1]);
           flag = false;
@@ -117,7 +117,7 @@ function filling(begin) {
 
 
 function mouseClicked() {
-  if (paint) {
+  if (flag) {
     begin = [floor(mouseX + offset), floor(mouseY + offset)];
     filling(begin);
   }
@@ -130,6 +130,6 @@ function keyPressed() {
     fig = true;
   }
   if (key === 's' || key === 'ы') {
-    paint = !paint;
+    flag = !flag;
   }
 }
